@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/matheushermes/FinGO/pkg/controllers"
+	"github.com/matheushermes/FinGO/internal/controllers"
 )
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
