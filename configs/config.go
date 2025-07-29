@@ -9,13 +9,14 @@ import (
 )
 
 var (
-	PORT              = ""
+	PORT               = ""
 	POSTGRES_HOST      = ""
 	POSTGRES_USER      = ""
 	POSTGRES_PASSWORD  = ""
 	POSTGRES_DB        = ""
 	POSTGRES_PORT      = ""
 	STRING_CONNECTION  = ""
+	SECRET_KEY         []byte
 )
 
 func LoadingEnv() {
@@ -62,4 +63,8 @@ func LoadingEnv() {
 		os.Getenv("POSTGRES_DB"),
 	)
 
+	SECRET_KEY = []byte(os.Getenv("SECRET_KEY"))
+	if len(SECRET_KEY) == 0 {
+		log.Fatal("A variável de ambiente SECRET_KEY não está definida no arquivo .env")
+	}
 }
