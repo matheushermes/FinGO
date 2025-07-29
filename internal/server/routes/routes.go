@@ -8,6 +8,11 @@ import (
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	main := router.Group("api/v1")
 	{
+		user := main.Group("user")
+		{
+			user.POST("register", controllers.RegisterUser)
+		}
+
 		crypto := main.Group("crypto")
 		{
 			crypto.POST("actives", controllers.RegisterActives)
