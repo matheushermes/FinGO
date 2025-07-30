@@ -1,3 +1,5 @@
-#Arquivos de ambiente
+#Arquivo de ambiente real (privado)
 .env
-.env.*
+
+#Manter o arquivo de exemplo no versionamento
+!.env.example
