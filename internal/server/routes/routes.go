@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/matheushermes/FinGO/internal/controllers"
+	"github.com/matheushermes/FinGO/internal/server/middlewares"
 )
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
@@ -14,7 +15,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			user.POST("login", controllers.Login)
 		}
 
-		crypto := main.Group("crypto")
+		crypto := main.Group("crypto", middlewares.AuthMiddleware())
 		{
 			crypto.POST("actives", controllers.RegisterActives)
 		}
