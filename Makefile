@@ -22,4 +22,3 @@ run:
 # Abrir terminal do banco PostgreSQL
 db-shell:
 	docker exec -it fingo_postgres psql -U fingo -d fingodb -c "SELECT * FROM users;"
-

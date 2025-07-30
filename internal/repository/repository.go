@@ -28,3 +28,15 @@ func (u *users) Create(user models.User) (uint64, error) {
 
 	return userID, nil
 }
+
+func (u *users) FindByEmail(email string) (models.User, error) {
+	query := `SELECT id, password FROM users WHERE email = $1`
+	var user models.User
+	
+	err := u.db.QueryRow(query, email).Scan(&user.ID, &user.Password)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}

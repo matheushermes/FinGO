@@ -11,6 +11,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		user := main.Group("user")
 		{
 			user.POST("register", controllers.RegisterUser)
+			user.POST("login", controllers.Login)
 		}
 
 		crypto := main.Group("crypto")

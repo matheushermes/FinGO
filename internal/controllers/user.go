@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/matheushermes/FinGO/internal/auth"
 	"github.com/matheushermes/FinGO/internal/database"
 	"github.com/matheushermes/FinGO/internal/models"
 	"github.com/matheushermes/FinGO/internal/repository"
+	"github.com/matheushermes/FinGO/internal/security"
 )
 
 func RegisterUser(c *gin.Context) {
@@ -45,5 +47,54 @@ func RegisterUser(c *gin.Context) {
 	c.JSON(201, gin.H{
 		"message": "user registered successfully",
 		"userID":  userID,
+	})
+}
+
+func Login(c *gin.Context) {
+	var user models.User
+
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(422, gin.H{
+			"error": "failed to login, please check the data provided",
+		})
+		return
+	}
+
+	db, err := database.ConnectDB()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "failed to connect to the database",
+		})
+		return
+	}
+	defer db.Close()
+
+	repository := repository.NewUsersRepository(db)
+	userFromDB, err := repository.FindByEmail(user.Email)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "failed to find user in the database",
+		})
+		return
+	}
+
+	if err = security.CheckPassword(userFromDB.Password, user.Password); err != nil {
+		c.JSON(401, gin.H{
+			"error": "invalid email or password",
+		})
+		return
+	}
+
+	token, err := auth.CreateToken(userFromDB.ID)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": "failed to create authentication token",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": "login successful",
+		"token": token,
 	})
 }
