@@ -4,8 +4,6 @@ import (
 	"database/sql"
 
 	"github.com/matheushermes/FinGO/internal/models"
-
-	_ "github.com/lib/pq" //PostgreSQL driver
 )
 
 type users struct {
