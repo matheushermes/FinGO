@@ -24,9 +24,12 @@ FROM alpine:latest
 WORKDIR /root/
 
 # Copia o binário do estágio anterior
-COPY --from=builder /app/fingo .
+COPY --from=builder /app/fingo ./
 
-# Expõe a porta que sua app usa
+# Copia o arquivo .env do estágio builder para a imagem final
+COPY --from=builder /app/.env ./
+
+# Expõe a porta da aplicação
 EXPOSE 8080
 
 # Executa o binário

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/matheushermes/FinGO/configs"
+	_ "github.com/lib/pq" //PostgreSQL driver
 )
 
 func ConnectDB() (*sql.DB, error) {
