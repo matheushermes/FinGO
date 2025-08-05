@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS cryptos (
     amount NUMERIC(20, 8) NOT NULL,              -- Quantidade comprada
     purchase_price_usd NUMERIC(20, 2) NOT NULL,  -- Valor total gasto na compra (em dólares)
     purchase_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    is_sold BOOLEAN DEFAULT FALSE,                -- Marcar se o ativo já foi vendido
+    is_solid BOOLEAN DEFAULT FALSE,                -- Marcar se o ativo já foi vendido
     notes TEXT,                                   -- Campo opcional para observações
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
