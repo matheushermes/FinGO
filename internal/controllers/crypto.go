@@ -58,3 +58,36 @@ func RegisterActives(c *gin.Context) {
 		"cryptoID": cryptoID,
 	})
 }
+
+func GetCryptos(c *gin.Context) {
+	userID, err := auth.ExtractDataFromToken(c)
+	if err != nil {
+		c.JSON(401, gin.H {
+			"error": err.Error(),
+		})
+		return
+	}
+
+	db, err := database.ConnectDB()
+	if err != nil {
+		c.JSON(500, gin.H {
+			"error": "failed to connect to the database",
+		})
+		return
+	}
+	defer db.Close()
+
+	repo := repository.NewCryptosRepository(db)
+	cryptos, err := repo.GetAllCryptos(userID)
+	if err != nil {
+		c.JSON(500, gin.H {
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"cryptos": cryptos,
+	})
+	
+}
