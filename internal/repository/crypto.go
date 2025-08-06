@@ -26,3 +26,23 @@ func (c *cryptos) Create(crypto models.Crypto) (uint64, error) {
 
 	return cryptoID, nil
 }
+
+func (c *cryptos) GetAllCryptos(userId uint64) ([]models.Crypto, error) {
+	query := `SELECT * FROM cryptos WHERE user_id = $1`
+	rows, err := c.db.Query(query, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var cryptos []models.Crypto
+	for rows.Next() {
+		var crypto models.Crypto
+		if err := rows.Scan(&crypto.ID, &crypto.UserID, &crypto.Name, &crypto.Symbol, &crypto.Amount, &crypto.PurchasePriceUSD, &crypto.PurchaseDate, &crypto.IsSolid, &crypto.Notes, &crypto.CreatedAt, &crypto.UpdatedAt); err != nil {
+			return nil, err
+		}
+		cryptos = append(cryptos, crypto)
+	}
+
+	return cryptos, nil
+}
