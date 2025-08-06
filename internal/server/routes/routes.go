@@ -18,6 +18,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		crypto := main.Group("crypto", middlewares.AuthMiddleware())
 		{
 			crypto.POST("actives", controllers.RegisterActives)
+			crypto.GET("actives", controllers.GetCryptos)
 		}
 	}
 
