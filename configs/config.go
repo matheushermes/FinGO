@@ -17,6 +17,7 @@ var (
 	POSTGRES_PORT      = ""
 	STRING_CONNECTION  = ""
 	SECRET_KEY         []byte
+	API_KEY_COINGECKO  = ""
 )
 
 func LoadingEnv() {
@@ -67,5 +68,10 @@ func LoadingEnv() {
 	SECRET_KEY = []byte(os.Getenv("SECRET_KEY"))
 	if len(SECRET_KEY) == 0 {
 		log.Fatal("A variável de ambiente SECRET_KEY não está definida no arquivo .env")
+	}
+
+	API_KEY_COINGECKO = os.Getenv("API_KEY_COINGECKO")
+	if API_KEY_COINGECKO == "" {
+		log.Fatal("A variável de ambiente API_KEY_COINGECKO não está definida no arquivo .env")
 	}
 }
