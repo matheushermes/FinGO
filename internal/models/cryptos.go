@@ -13,6 +13,9 @@ type Crypto struct {
 	Symbol string 				`json:"symbol,omitempty"`
 	Amount float64 				`json:"amount,omitempty"`
 	PurchasePriceUSD float64 	`json:"purchase_price_usd,omitempty"`
+	VariationPercent float64 	`json:"variation_percent"`
+	CurrentPriceUSD float64 	`json:"current_price_usd"`
+	CurrentTotalValueUSD float64 `json:"current_total_value_usd"`
 	PurchaseDate time.Time 		`json:"purchase_date"`
 	IsSolid bool 				`json:"is_solid,omitempty"`
 	Notes string 				`json:"notes,omitempty"`
