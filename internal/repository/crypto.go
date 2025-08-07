@@ -38,7 +38,7 @@ func (c *cryptos) GetAllCryptos(userId uint64) ([]models.Crypto, error) {
 	var cryptos []models.Crypto
 	for rows.Next() {
 		var crypto models.Crypto
-		if err := rows.Scan(&crypto.ID, &crypto.UserID, &crypto.Name, &crypto.Symbol, &crypto.Amount, &crypto.PurchasePriceUSD, &crypto.PurchaseDate, &crypto.IsSolid, &crypto.Notes, &crypto.CreatedAt, &crypto.UpdatedAt); err != nil {
+		if err := rows.Scan(&crypto.ID, &crypto.UserID, &crypto.Name, &crypto.Symbol, &crypto.Amount, &crypto.PurchasePriceUSD, &crypto.VariationPercent, &crypto.CurrentPriceUSD, &crypto.CurrentTotalValueUSD, &crypto.PurchaseDate, &crypto.IsSolid, &crypto.Notes, &crypto.CreatedAt, &crypto.UpdatedAt); err != nil {
 			return nil, err
 		}
 		cryptos = append(cryptos, crypto)
