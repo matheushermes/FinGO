@@ -5,6 +5,9 @@ CREATE TABLE IF NOT EXISTS cryptos (
     symbol VARCHAR(10) NOT NULL,                 -- Símbolo (ex: BTC)
     amount NUMERIC(20, 8) NOT NULL,              -- Quantidade comprada
     purchase_price_usd NUMERIC(20, 2) NOT NULL,  -- Valor total gasto na compra (em dólares)
+    variation_percent NUMERIC(5, 2) DEFAULT 0,       -- Variação percentual do preço
+    current_price_usd NUMERIC(20, 2) DEFAULT 0,     -- Preço atual (em dólares)
+    current_total_value_usd NUMERIC(20, 2) DEFAULT 0, -- Valor total atual (em dólares)
     purchase_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_solid BOOLEAN DEFAULT FALSE,                -- Marcar se o ativo já foi vendido
     notes TEXT,                                   -- Campo opcional para observações
