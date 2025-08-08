@@ -10,11 +10,18 @@ import (
 
 var (
 	PORT               = ""
+
 	POSTGRES_HOST      = ""
 	POSTGRES_USER      = ""
 	POSTGRES_PASSWORD  = ""
 	POSTGRES_DB        = ""
 	POSTGRES_PORT      = ""
+
+	REDIS_HOST         = ""
+	REDIS_PORT         = ""
+	REDIS_DB           = ""
+	REDIS_PASSWORD     = ""
+
 	STRING_CONNECTION  = ""
 	SECRET_KEY         []byte
 	API_KEY_COINGECKO  = ""
@@ -54,6 +61,26 @@ func LoadingEnv() {
 	POSTGRES_PORT = os.Getenv("POSTGRES_PORT")
 	if POSTGRES_PORT == "" {
 		log.Fatal("A variável de ambiente POSTGRES_PORT não está definida no arquivo .env")
+	}
+
+	REDIS_HOST = os.Getenv("REDIS_HOST")
+	if REDIS_HOST == "" {
+		log.Fatal("A variável de ambiente REDIS_HOST não está definida no arquivo .env")
+	}
+
+	REDIS_PORT = os.Getenv("REDIS_PORT")
+	if REDIS_PORT == "" {
+		log.Fatal("A variável de ambiente REDIS_PORT não está definida no arquivo .env")
+	}
+
+	REDIS_DB = os.Getenv("REDIS_DB")
+	if REDIS_DB == "" {
+		log.Fatal("A variável de ambiente REDIS_DB não está definida no arquivo .env")
+	}
+
+	REDIS_PASSWORD = os.Getenv("REDIS_PASSWORD")
+	if REDIS_PASSWORD == "" {
+		log.Fatal("A variável de ambiente REDIS_PASSWORD não está definida no arquivo .env")
 	}
 
 	STRING_CONNECTION = fmt.Sprintf(
