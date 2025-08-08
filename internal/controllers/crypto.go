@@ -90,7 +90,7 @@ func GetCryptos(c *gin.Context) {
 	}
 
 	for i := range cryptos {
-		currentPrice, err := utils.GetPrinceFromCoinGecko(cryptos[i].Symbol)
+		currentPrice, err := utils.GetPriceFromCoinGecko(cryptos[i].Symbol)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": fmt.Sprintf("failed to fetch current price for %s: %v", cryptos[i].Symbol, err),

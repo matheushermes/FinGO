@@ -6,12 +6,21 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/matheushermes/FinGO/configs"
+	"github.com/matheushermes/FinGO/internal/cache"
 )
 
-func GetPrinceFromCoinGecko(symbol string) (float64, error) {
+func GetPriceFromCoinGecko(symbol string) (float64, error) {
 	symbol = strings.ToLower(symbol)
+	cacheKey := "price:" + symbol
+
+	if val, err := cache.Get(cacheKey); err == nil {
+		var price float64
+		fmt.Sscanf(val, "%f", &price)
+		return price, nil
+	}
 
 	url := fmt.Sprintf("https://api.coingecko.com/api/v3/simple/price?symbols=%s&vs_currencies=usd", symbol)
 
@@ -44,6 +53,8 @@ func GetPrinceFromCoinGecko(symbol string) (float64, error) {
 	if !ok {
 		return 0, fmt.Errorf("symbol %s not found in CoinGecko response", symbol)
 	}
+
+	cache.Set(cacheKey, fmt.Sprintf("%f", price), 9*time.Minute)
 	
 	return price, nil
 }
