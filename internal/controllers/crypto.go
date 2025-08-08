@@ -8,7 +8,7 @@ import (
 	"github.com/matheushermes/FinGO/internal/database"
 	"github.com/matheushermes/FinGO/internal/models"
 	"github.com/matheushermes/FinGO/internal/repository"
-	"github.com/matheushermes/FinGO/internal/utils"
+	"github.com/matheushermes/FinGO/pkg/utils"
 )
 
 func RegisterActives(c *gin.Context) {
