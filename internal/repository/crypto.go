@@ -46,3 +46,12 @@ func (c *cryptos) GetAllCryptos(userId uint64) ([]models.Crypto, error) {
 
 	return cryptos, nil
 }
+
+func (c *cryptos) GetCrypto(cryptoId uint64) (models.Crypto, error) {
+	query := `SELECT * FROM cryptos WHERE id = $1`
+	var crypto models.Crypto
+	if err := c.db.QueryRow(query, cryptoId).Scan(&crypto.ID, &crypto.UserID, &crypto.Name, &crypto.Symbol, &crypto.Amount, &crypto.PurchasePriceUSD, &crypto.VariationPercent, &crypto.CurrentPriceUSD, &crypto.CurrentTotalValueUSD, &crypto.PurchaseDate, &crypto.IsSolid, &crypto.Notes, &crypto.CreatedAt, &crypto.UpdatedAt); err != nil {
+		return models.Crypto{}, err
+	}
+	return crypto, nil
+}
