@@ -19,6 +19,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		{
 			crypto.POST("actives", controllers.RegisterActives)
 			crypto.GET("actives", controllers.GetCryptos)
+			crypto.GET("actives/:id", controllers.GetCrypto)
 		}
 	}
 
