@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/matheushermes/FinGO/internal/auth"
@@ -90,26 +91,58 @@ func GetCryptos(c *gin.Context) {
 	}
 
 	for i := range cryptos {
-		currentPrice, err := utils.GetPriceFromCoinGecko(cryptos[i].Symbol)
-		if err != nil {
+		if err = utils.EnrichCryptoWithPrice(&cryptos[i]); err != nil {
 			c.JSON(500, gin.H{
-				"error": fmt.Sprintf("failed to fetch current price for %s: %v", cryptos[i].Symbol, err),
+				"error": fmt.Sprintf("failed to enrich crypto with price: %v", err),
 			})
 			return
 		}
-
-		variation := ((currentPrice - cryptos[i].PurchasePriceUSD) / cryptos[i].PurchasePriceUSD) * 100
-		currentTotalValue := currentPrice * cryptos[i].Amount
-
-		cryptos[i].CurrentPriceUSD = currentPrice
-		cryptos[i].VariationPercent = variation
-		cryptos[i].CurrentTotalValueUSD = currentTotalValue
-
-		fmt.Println(cryptos[i])
 	}
 
 	c.JSON(200, gin.H{
 		"cryptos": cryptos,
 	})
 	
+}
+
+func GetCrypto(c *gin.Context) {
+	parameter := c.Param("id")
+	idCrypto, err := strconv.ParseUint(parameter, 10, 64)
+	if err != nil {
+		c.JSON(404, gin.H {
+			"error": "invalid crypto ID",
+		})
+		return
+	}
+
+	db, err := database.ConnectDB()
+	if err != nil {
+		c.JSON(500, gin.H {
+			"error": "failed to connect to the database",
+		})
+		return
+	}
+	defer db.Close()
+
+	repo := repository.NewCryptosRepository(db)
+	crypto, err := repo.GetCrypto(idCrypto)
+	if err != nil {
+		c.JSON(500, gin.H {
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err = utils.EnrichCryptoWithPrice(&crypto); err != nil {
+		c.JSON(500, gin.H{
+			"error": fmt.Sprintf("failed to enrich crypto with price: %v", err),
+		})
+		return
+	}
+
+	fmt.Println(crypto)
+
+	c.JSON(200, gin.H{
+		"crypto": crypto,
+	})
 }
