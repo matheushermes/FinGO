@@ -55,3 +55,39 @@ func (c *cryptos) GetCrypto(cryptoId uint64) (models.Crypto, error) {
 	}
 	return crypto, nil
 }
+
+func (c *cryptos) UpdateCrypto(crypto models.Crypto) error {
+	query := `UPDATE cryptos SET variation_percent = $1, current_price_usd = $2, current_total_value_usd =$3, updated_at = NOW() WHERE id = $4`
+	_, err := c.db.Exec(query,
+		crypto.VariationPercent,
+		crypto.CurrentPriceUSD,
+		crypto.CurrentTotalValueUSD,
+		crypto.ID,
+	)
+	return err
+}
+
+func (c *cryptos) GetAllCryptosAllUsers() ([]models.Crypto, error) {
+	query := `SELECT * FROM cryptos`
+	rows, err := c.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var cryptos []models.Crypto
+	for rows.Next() {
+		var crypto models.Crypto
+		if err := rows.Scan(
+			&crypto.ID, &crypto.UserID, &crypto.Name, &crypto.Symbol,
+			&crypto.Amount, &crypto.PurchasePriceUSD, &crypto.VariationPercent,
+			&crypto.CurrentPriceUSD, &crypto.CurrentTotalValueUSD,
+			&crypto.PurchaseDate, &crypto.IsSolid, &crypto.Notes,
+			&crypto.CreatedAt, &crypto.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		cryptos = append(cryptos, crypto)
+	}
+	return cryptos, nil
+}
