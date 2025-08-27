@@ -54,7 +54,7 @@ func GetPriceFromCoinGecko(symbol string) (float64, error) {
 		return 0, fmt.Errorf("symbol %s not found in CoinGecko response", symbol)
 	}
 
-	cache.Set(cacheKey, fmt.Sprintf("%f", price), 9*time.Minute)
+	cache.Set(cacheKey, fmt.Sprintf("%f", price), 15*time.Minute)
 	
 	return price, nil
 }
