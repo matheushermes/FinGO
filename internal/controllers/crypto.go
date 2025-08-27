@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -90,12 +91,23 @@ func GetCryptos(c *gin.Context) {
 		return
 	}
 
+	var failedUpdates []string
+
 	for i := range cryptos {
 		if err = utils.EnrichCryptoWithPrice(&cryptos[i]); err != nil {
-			c.JSON(500, gin.H{
-				"error": fmt.Sprintf("failed to enrich crypto with price: %v", err),
-			})
-			return
+			failedUpdates = append(failedUpdates, fmt.Sprintf("%s: %v", cryptos[i].Symbol, err))
+			continue
+		}
+
+		if err := repo.UpdateCrypto(cryptos[i]); err != nil {
+			failedUpdates = append(failedUpdates, fmt.Sprintf("DB update failed for %s: %v", cryptos[i].Symbol, err))
+			continue
+		}
+	}
+
+	if len(failedUpdates) > 0 {
+		for _, msg := range failedUpdates {
+			log.Printf("[GetCryptos] update failed: %s", msg)
 		}
 	}
 
@@ -139,8 +151,6 @@ func GetCrypto(c *gin.Context) {
 		})
 		return
 	}
-
-	fmt.Println(crypto)
 
 	c.JSON(200, gin.H{
 		"crypto": crypto,
