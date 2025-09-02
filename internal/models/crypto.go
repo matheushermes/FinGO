@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+type MarketChart struct {
+	Prices       [][]float64 `json:"prices"`
+	MarketCaps   [][]float64 `json:"market_caps"`
+	TotalVolumes [][]float64 `json:"total_volumes"`
+}
+
 type Crypto struct {
 	ID uint64 					`json:"id,omitempty"`
 	UserID uint64 				`json:"userID,omitempty"`
