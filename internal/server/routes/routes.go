@@ -20,6 +20,8 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			crypto.POST("actives", controllers.RegisterActives)
 			crypto.GET("actives", controllers.GetCryptos)
 			crypto.GET("actives/:id", controllers.GetCrypto)
+			crypto.GET(":crypto/history", controllers.GetCryptoHistory)
+			crypto.GET(":crypto/history/range", controllers.GetCryptoHistoryRange)
 		}
 	}
 

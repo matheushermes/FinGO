@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/matheushermes/FinGO/internal/auth"
@@ -154,5 +155,64 @@ func GetCrypto(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"crypto": crypto,
+	})
+}
+
+func GetCryptoHistory(c *gin.Context) {
+	crypto := c.Param("crypto")
+	days := c.DefaultQuery("days", "30")
+	interval := c.DefaultQuery("interval", "daily")
+
+	data, err := utils.GetCryptoMarketChart(crypto, days, interval)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": fmt.Sprintf("failed to get crypto market chart: %v", err),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"crypto": crypto,
+		"days": days,
+		"interval": interval,
+		"history": data,
+	})
+}
+
+func GetCryptoHistoryRange(c *gin.Context) {
+	crypto := c.Param("crypto")
+	fromStr := c.Query("from")
+	toStr := c.Query("to")
+
+	from, err := time.Parse("2006-01-02", fromStr)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": "invalid from date, expected format YYYY-MM-DD",
+		})
+		return
+	}
+
+	to, err := time.Parse("2006-01-02", toStr)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": "invalid to date, expected format YYYY-MM-DD",
+		})
+		return
+	}
+
+	data, err := utils.GetCryptoMarketChartRange(crypto, from, to)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": fmt.Sprintf("failed to fetch history range: %v", err),
+		})
+		return
+	}
+
+	
+	c.JSON(200, gin.H{
+		"crypto":  crypto,
+		"from":    fromStr,
+		"to":      toStr,
+		"history": data,
 	})
 }
