@@ -34,7 +34,7 @@ run:
 
 ## Recompilar e reiniciar containers
 restart:
-	$(DC) down
+	$(DC) down -v
 	$(DC) up -d --build
 
 ## Ver logs da aplicação
