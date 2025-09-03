@@ -17,7 +17,7 @@ import (
 func RegisterActives(c *gin.Context) {
 	var crypto models.Crypto
 
-	userID, err := auth.ExtractDataFromToken(c)
+	userID, _, err := auth.ExtractDataFromToken(c)
 	if err != nil {
 		c.JSON(401, gin.H {
 			"error": err.Error(),
@@ -66,7 +66,7 @@ func RegisterActives(c *gin.Context) {
 }
 
 func GetCryptos(c *gin.Context) {
-	userID, err := auth.ExtractDataFromToken(c)
+	userID, _, err := auth.ExtractDataFromToken(c)
 	if err != nil {
 		c.JSON(401, gin.H {
 			"error": err.Error(),
