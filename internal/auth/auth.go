@@ -17,11 +17,12 @@ var (
 	ErrNoToken      = errors.New("authorization token not found")
 )
 
-func CreateToken(userID uint64) (string, error) {
+func CreateToken(userID uint64, email string) (string, error) {
 	permissions := jwt.MapClaims{
 		"authorized": true,
 		"exp":        time.Now().Add(8 * time.Hour).Unix(),
 		"userId":     userID,
+		"email":      email,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, permissions)
 	return token.SignedString([]byte(configs.SECRET_KEY))
@@ -60,25 +61,30 @@ func ValidateToken(c *gin.Context) error {
 	return nil
 }
 
-func ExtractDataFromToken(c *gin.Context) (uint64, error) {
+func ExtractDataFromToken(c *gin.Context) (uint64, string, error) {
 	tokenString := ExtractToken(c)
 	if tokenString == "" {
-		return 0, ErrNoToken
+		return 0, "", ErrNoToken
 	}
 
 	token, err := jwt.Parse(tokenString, returnVericationKey)
 	if err != nil || !token.Valid {
-		return 0, ErrInvalidToken
+		return 0, "", ErrInvalidToken
 	}
 
 	if permissions, ok := token.Claims.(jwt.MapClaims); ok {
 		userIDStr := fmt.Sprintf("%.0f", permissions["userId"])
 		userID, err := strconv.ParseUint(userIDStr, 10, 64)
 		if err != nil {
-			return 0, fmt.Errorf("failed to parse userID: %w", err)
+			return 0, "", fmt.Errorf("failed to parse userID: %w", err)
 		}
-		return userID, nil
+
+		email, ok := permissions["email"].(string)
+		if !ok {
+			return 0, "", fmt.Errorf("failed to parse email from token")
+		}
+		return userID, email, nil
 	}
 
-	return 0, ErrInvalidToken
+	return 0, "", ErrInvalidToken
 }
