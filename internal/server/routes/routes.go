@@ -23,6 +23,11 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			crypto.GET(":crypto/history", controllers.GetCryptoHistory)
 			crypto.GET(":crypto/history/range", controllers.GetCryptoHistoryRange)
 		}
+
+		alert := main.Group("alert", middlewares.AuthMiddleware())
+		{
+			alert.POST("crypto", controllers.CreatePriceCryptoAlert)
+		}
 	}
 
 	return router
