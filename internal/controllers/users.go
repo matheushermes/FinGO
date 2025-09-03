@@ -85,7 +85,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := auth.CreateToken(userFromDB.ID)
+	token, err := auth.CreateToken(userFromDB.ID, user.Email)
 	if err != nil {
 		c.JSON(500, gin.H{
 			"error": "failed to create authentication token",
